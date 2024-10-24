@@ -11,11 +11,9 @@ export interface IPregunta {
 export interface IQuestion extends Document {
     nombre: string; // Nombre del cuestionario
     descripcion: string; // Descripción del cuestionario
-    precio: number; // Precio asociado al cuestionario
-    contacto: string; // Información de contacto
+  
     fotos: string[]; // Array de URLs de las fotos
     user_id: string; // ID del usuario que creó el cuestionario
-    rating: number; // Rating del cuestionario
-    contadorSolicitudes: number; // Contador de solicitudes
+   
     cuestionario: IPregunta[]; // Array de preguntas del cuestionario
 }
