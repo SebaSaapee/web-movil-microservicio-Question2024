@@ -48,6 +48,19 @@ export class QuestionController {
         return this.questionService.findByUser(userId);
     }
 
+    // Nueva función para guardar la respuesta seleccionada desde el frontend
+    @MessagePattern(QuestionsMSG.SAVE_ANSWER)
+    async saveAnswer(@Payload() payload: { questionId: string; numeroPregunta: number; respuesta: string }) {
+        const { questionId, numeroPregunta, respuesta } = payload;
+
+        try {
+            const updatedQuestion = await this.questionService.saveAnswer(questionId, numeroPregunta, respuesta);
+            return { message: 'Answer saved successfully', updatedQuestion };
+        } catch (error) {
+            this.logger.error(`Error saving answer: ${error.message}`);
+            throw error;
+        }
+    }
 
    
 

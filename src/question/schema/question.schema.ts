@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose';
 
-// Esquema para las preguntas dentro de un cuestionario
+// Esquema para las preguntas de tipo alternativa dentro de un cuestionario
 export const PreguntaSchema = new mongoose.Schema(
     {
+        numero: { type: Number, required: true }, // Número de la pregunta
         pregunta: { type: String, required: true },
-        tipo: { type: String, enum: ['abierta', 'multiple', 'escala'], required: true },
-        opciones: [{ type: String }], // Opciones solo para preguntas de tipo 'multiple'
-        respuestaEscala: { type: Number, min: 1, max: 5 }, // Solo para preguntas de tipo 'escala'
-        respuestaAbierta: { type: String }, // Solo para preguntas de tipo 'abierta'
+        tipo: { type: String, enum: ['multiple'], default: 'multiple', required: true }, // Solo tipo 'multiple'
+        opciones: [{ type: String, required: true }], // Opciones para preguntas de tipo 'multiple'
+        respuestaSeleccionada: { type: String }, // Campo para la respuesta elegida por el usuario
     },
     { _id: false } // No se necesita un _id separado para cada pregunta
 );
@@ -17,16 +17,9 @@ export const QuestionSchema = new mongoose.Schema(
     {
         nombre: { type: String, required: true },
         descripcion: { type: String, required: true },
-       
-       
         fotos: [{ type: String }],
-       
         user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Referencia al modelo User
-      
-        cuestionario: [PreguntaSchema], // Array de preguntas
+        cuestionario: [PreguntaSchema], // Array de preguntas de tipo alternativa
     },
     { timestamps: true } // Añade createdAt y updatedAt
 );
-
-// Índice único para el nombre del cuestionario
-QuestionSchema.index({ nombre: 1 }, { unique: true });

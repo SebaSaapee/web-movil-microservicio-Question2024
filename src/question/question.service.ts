@@ -56,6 +56,24 @@ async findByUser(userId: string): Promise<IQuestion[]> {
   return await this.model.find({ user_id: userId });
 }
 
+// Función para guardar la respuesta desde el frontend
+async saveAnswer(questionId: string, numeroPregunta: number, respuesta: string): Promise<IQuestion> {
+    const question = await this.model.findById(questionId);
+    if (!question) {
+      throw new NotFoundException('Question not found');
+    }
+
+    // Encuentra la pregunta específica en el cuestionario y actualiza la respuesta
+    const pregunta = question.cuestionario.find(p => p.numero === numeroPregunta);
+    if (!pregunta) {
+      throw new NotFoundException('Pregunta not found');
+    }
+
+    pregunta.respuestaSeleccionada = respuesta; // Actualiza la respuesta
+
+    // Guarda los cambios
+    return await question.save();
+  }
 
 }
 
