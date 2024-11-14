@@ -14,26 +14,18 @@ export class QuestionService {
 
     constructor(@InjectModel(QUESTION.name) private readonly model:Model<IQuestion>,
     @InjectModel(USER.name) private readonly userModel: Model<IUser>,
-                                                             ){}
+      ){}
 
 
-    async create(questionDTO: QuestionDTO, userId: string): Promise<IQuestion> {
-        // Verificar si el usuario existe antes de proceder
-        const user = await this.userModel.findById(userId);
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
+async create(questionDTO: QuestionDTO): Promise<IQuestion> {
+    const newService = new this.model({
+    ...questionDTO,
+               // Puedes agregar otros campos predeterminados o configuraciones aquí si es necesario
+        }); // Guardar el servicio en la base de datos y retornar el resultado
+ return await newService.save();
+}
 
-        // Asociar el ID de usuario al servicio que estás creando
-        const newService = new this.model({
-            ...questionDTO,
-            user_id: userId, // Asigna el ID del usuario al campo user_id del servicio
-        // Default rating to 0 if not provided
-        });
 
-        // Guardar el servicio en la base de datos y retornar el resultado
-        return await newService.save();
-    }
 
 async findAll(): Promise<IQuestion[]>{
     return await this.model.find()
@@ -56,24 +48,6 @@ async findByUser(userId: string): Promise<IQuestion[]> {
   return await this.model.find({ user_id: userId });
 }
 
-// Función para guardar la respuesta desde el frontend
-async saveAnswer(questionId: string, numeroPregunta: number, respuesta: string): Promise<IQuestion> {
-    const question = await this.model.findById(questionId);
-    if (!question) {
-      throw new NotFoundException('Question not found');
-    }
-
-    // Encuentra la pregunta específica en el cuestionario y actualiza la respuesta
-    const pregunta = question.cuestionario.find(p => p.numero === numeroPregunta);
-    if (!pregunta) {
-      throw new NotFoundException('Pregunta not found');
-    }
-
-    pregunta.respuestaSeleccionada = respuesta; // Actualiza la respuesta
-
-    // Guarda los cambios
-    return await question.save();
-  }
 
 }
 

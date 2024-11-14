@@ -7,7 +7,7 @@ export const PreguntaSchema = new mongoose.Schema(
         pregunta: { type: String, required: true },
         tipo: { type: String, enum: ['multiple'], default: 'multiple', required: true }, // Solo tipo 'multiple'
         opciones: [{ type: String, required: true }], // Opciones para preguntas de tipo 'multiple'
-        respuestaSeleccionada: { type: String }, // Campo para la respuesta elegida por el usuario
+        
     },
     { _id: false } // No se necesita un _id separado para cada pregunta
 );
@@ -18,7 +18,7 @@ export const QuestionSchema = new mongoose.Schema(
         nombre: { type: String, required: true },
         descripcion: { type: String, required: true },
         fotos: [{ type: String }],
-        user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Referencia al modelo User
+       // Referencia al modelo User
         cuestionario: [PreguntaSchema], // Array de preguntas de tipo alternativa
     },
     { timestamps: true } // Añade createdAt y updatedAt
